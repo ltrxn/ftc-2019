@@ -6,6 +6,7 @@ public class Testing extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        System.out.println("HI LIWEN");
 
     }
 }
