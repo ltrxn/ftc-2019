@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Archive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Hardware;
+import org.firstinspires.ftc.teamcode.System.Hardware;
 
 public class EncoderPosition implements Runnable {
 
