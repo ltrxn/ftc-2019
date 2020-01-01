@@ -18,6 +18,7 @@ import java.util.Locale;
 public class DriveOpMode extends LinearOpMode {
 
     Hardware robot = new Hardware();
+    private ElapsedTime runtime = new ElapsedTime();
 
     //servos
     private static final double CLAW_OPEN   = .8;
@@ -52,34 +53,31 @@ public class DriveOpMode extends LinearOpMode {
             double findDegree = (findRadian*(180/Math.PI)) + angles.firstAngle;
             double findAngle = findDegree*(Math.PI/180);
             double leftY = gamepad1.left_stick_y / 1.2;
-            final double v1 = findRadius * Math.cos(findAngle) - leftY;
-            final double v2 = findRadius * Math.sin(findAngle) - leftY;
-            final double v3 = findRadius * Math.sin(findAngle) - leftY;
-            final double v4 = findRadius * Math.cos(findAngle) - leftY;
+            double v1 = findRadius * Math.cos(findAngle) - leftY;
+            double v2 = findRadius * Math.sin(findAngle) - leftY;
+            double v3 = findRadius * Math.sin(findAngle) - leftY;
+            double v4 = findRadius * Math.cos(findAngle) - leftY;
 
             telemetry.addData("Radius", findRadius);
             telemetry.addData("Angle", findAngle);
-            robot.leftFront.setPower(v1);
-            robot.rightFront.setPower(v2);
-            robot.leftBack.setPower(v3);
-            robot.rightBack.setPower(v4);
+
 
             //Gamepad 1 - RIGHT TRIGGER - Robot turns clockwise
-            while (gamepad1.right_trigger > 0) {
+            if (gamepad1.right_trigger > 0) {
                 double speed = scaleInput(gamepad1.right_trigger);
-                robot.leftFront.setPower(speed);
-                robot.rightFront.setPower(-speed);
-                robot.leftBack.setPower(speed);
-                robot.rightBack.setPower(-speed);
+                v1 = speed;
+                v2 = -speed;
+                v3 = speed;
+                v4 = -speed;
             }
 
             //Gamepad 1 - LET TRIGGER - Robot turns counter-clockwise
-            while (gamepad1.left_trigger > 0) {
+            if (gamepad1.left_trigger > 0) {
                 double speed = scaleInput(gamepad1.left_trigger);
-                robot.leftFront.setPower(-speed);
-                robot.rightFront.setPower(speed);
-                robot.leftBack.setPower(-speed);
-                robot.rightBack.setPower(speed);
+                v1 = -speed;
+                v2 = speed;
+                v3 = -speed;
+                v4 = speed;
             }
 
             //Gamepad 1/2 - RIGHT BUMPER - Claws open
@@ -92,10 +90,13 @@ public class DriveOpMode extends LinearOpMode {
                 clawPosition = CLAW_OPEN;
             }
 
-            //set power to servos
+            //set power to servos and motors
             robot.claw.setPosition(clawPosition);
+            robot.setMotorPower(v1, v2, v3, v4);
 
             //telemetry
+
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Encoder rightFront", robot.rightFront.getCurrentPosition());
             telemetry.addData("Encoder rightBack", robot.rightBack.getCurrentPosition());
             telemetry.addData("Encoder leftFront", robot.leftFront.getCurrentPosition());

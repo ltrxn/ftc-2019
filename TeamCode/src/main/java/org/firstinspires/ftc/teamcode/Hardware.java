@@ -79,4 +79,27 @@ public class Hardware {
         rightFront.setMode(runMode);
         rightBack.setMode(runMode);
     }
+
+    /**
+     * Sets the power to each motor
+     * @param leftFrontPower    power to use for left front
+     * @param rightFrontPower   power to use for right front
+     * @param leftBackPower     power to use for left back
+     * @param rightBackPower    power to use for right back
+     */
+    public void setMotorPower(double leftFrontPower, double rightFrontPower, double leftBackPower, double rightBackPower) {
+        leftFront.setPower(leftFrontPower);
+        rightFront.setPower(rightFrontPower);
+        leftBack.setPower(leftBackPower);
+        rightBack.setPower(rightBackPower);
+    }
+
+    /**
+     * Adds telemetry data about the current encoder values of the motors
+     */
+    public void displayEncoderValues() {
+        tele.addData("Front",    "left (%.2f), right (%.2f)", leftFront.getCurrentPosition(), rightFront.getCurrentPosition());
+        tele.addData("Back",     "left (%.2f), right (%.2f)", leftBack.getCurrentPosition(), rightBack.getCurrentPosition());
+    }
 }
+
