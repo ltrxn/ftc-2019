@@ -19,8 +19,8 @@ public class DriveOpMode extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //servos
-    private static final double CLAW_OPEN   = .8;
-    private static final double CLAW_CLOSE  = .5;
+    private static final double CLAW_OPEN   = .65;
+    private static final double CLAW_CLOSE  = .2;
     private double clawPosition = CLAW_OPEN;
 
     //gyro
@@ -85,7 +85,7 @@ public class DriveOpMode extends LinearOpMode {
 
             //Gamepad 1/2 - LEFT BUMPER - Claws closes
             if (gamepad1.right_bumper || gamepad2.right_bumper) {
-                clawPosition = CLAW_OPEN;
+                clawPosition = CLAW_CLOSE;
             }
 
             //set power to servos and motors
@@ -100,6 +100,7 @@ public class DriveOpMode extends LinearOpMode {
             telemetry.addData("Encoder leftFront", robot.leftFront.getCurrentPosition());
             telemetry.addData("Encoder leftBack", robot.leftBack.getCurrentPosition());
             telemetry.addData("Heading", formatAngle(angles.angleUnit, angles.firstAngle));
+            telemetry.addData("Claw position", robot.claw.getPosition());
             telemetry.update();
             idle();
 

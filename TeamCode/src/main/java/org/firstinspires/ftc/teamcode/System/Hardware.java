@@ -50,7 +50,7 @@ public class Hardware {
         rightBack = map.get(DcMotor.class, "rightBack");
 
         //define and initialize servos
-        claw = map.get(Servo.class, "grabber");
+        claw = map.get(Servo.class, "claw");
 
         //initialize IMU
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -64,8 +64,8 @@ public class Hardware {
         imu.initialize(parameters);
 
         //reverse left side
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
