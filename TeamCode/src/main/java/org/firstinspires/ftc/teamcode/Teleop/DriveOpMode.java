@@ -23,6 +23,9 @@ public class DriveOpMode extends LinearOpMode {
     private static final double CLAW_CLOSE  = .2;
     private double clawPosition = CLAW_OPEN;
 
+    //motor
+    private double pulleyPower = 0;
+
     //gyro
     private Orientation angles;
 
@@ -88,9 +91,11 @@ public class DriveOpMode extends LinearOpMode {
                 clawPosition = CLAW_CLOSE;
             }
 
+
             //set power to servos and motors
             robot.claw.setPosition(clawPosition);
             robot.setMotorPower(v1, v2, v3, v4);
+            robot.pulley.setPower(-gamepad2.right_stick_y);
 
             //telemetry
 

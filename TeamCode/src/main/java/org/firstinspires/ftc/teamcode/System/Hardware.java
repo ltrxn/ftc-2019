@@ -16,6 +16,8 @@ public class Hardware {
     public DcMotor rightFront   = null;
     public DcMotor rightBack    = null;
 
+    public DcMotor pulley       = null;
+
     public Servo claw           = null;
 
     public BNO055IMU imu = null;
@@ -48,6 +50,8 @@ public class Hardware {
         rightFront = map.get(DcMotor.class, "rightFront");
         leftBack = map.get(DcMotor.class, "leftBack");
         rightBack = map.get(DcMotor.class, "rightBack");
+
+        pulley = map.get(DcMotor.class, "pulley");
 
         //define and initialize servos
         claw = map.get(Servo.class, "claw");
