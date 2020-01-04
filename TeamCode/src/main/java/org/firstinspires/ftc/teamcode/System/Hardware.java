@@ -80,6 +80,11 @@ public class Hardware {
         rightBack.setMode(runMode);
     }
 
+    public void resetEncoders() {
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     /**
      * Sets the power to each motor
      * @param leftFrontPower    power to use for left front
