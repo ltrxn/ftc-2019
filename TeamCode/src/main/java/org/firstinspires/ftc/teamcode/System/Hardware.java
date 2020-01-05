@@ -104,6 +104,16 @@ public class Hardware {
         rightBack.setPower(rightBackPower);
     }
 
+    public void leftDrive(double power) {
+        leftFront.setPower(power);
+        leftBack.setPower(power);
+    }
+
+    public void rightDrive(double power) {
+        rightFront.setPower(power);
+        rightBack.setPower(power);
+    }
+
     /**
      * Adds telemetry data about the current encoder values of the motors
      */
@@ -117,5 +127,68 @@ public class Hardware {
         angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles;
     }
+
+    public int getAngleDegree() {
+        Orientation angles = null;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return (int) -angles.firstAngle;
+    }
+
+    public Telemetry getTele() {
+        return tele;
+    }
+    public void turn(int target) {
+        int currentAngle = getAngleDegree(); //robot's current angel
+        int turnTarget = target + currentAngle; //set the target
+
+        if (turnTarget > 179) {
+            turnTarget %= 180; //make sure you don't go >180
+            turnTarget = -180 + turnTarget;
+            while ((Math.abs(getAngleDegree() - turnTarget) > 3)) {
+                leftDrive(.8);
+                rightDrive(0);
+                tele.addData("current position", getAngleDegree());
+                tele.addData("target position", turnTarget);
+                tele.addData("difference between current and target: ", Math.abs(getAngleDegree() - turnTarget));
+                tele.addData("is current greater? ", getAngleDegree() > target);
+                tele.update();
+            }
+
+        } else if (turnTarget < -179) {
+            turnTarget %= 180; //make sure you don't go <-180
+            turnTarget = 180 + turnTarget;
+            while ((Math.abs(getAngleDegree() - turnTarget) > 3)) {
+
+                leftDrive(0);
+                rightDrive(.8);
+                tele.addData("current position", getAngleDegree());
+                tele.addData("target position", turnTarget);
+                tele.addData("difference between current and target: ", Math.abs(getAngleDegree() - turnTarget));
+                tele.addData("is current greater? ", getAngleDegree() > target);
+                tele.update();
+            }
+        } else {
+
+            while ((Math.abs(getAngleDegree() - turnTarget) > 3)) {
+                if (getAngleDegree() > target) { //if you are to the right of the target, rotate left
+                    leftDrive(0);
+                    rightDrive(.8);
+                }
+                if (getAngleDegree() < target) { //if you are to the left of the target, rotate right
+                    leftDrive(.8);
+                    rightDrive(0);
+                }
+                tele.addData("current position", getAngleDegree());
+                tele.addData("target position", turnTarget);
+                tele.addData("difference between current and target: ", Math.abs(getAngleDegree() - turnTarget));
+                tele.addData("is current greater? ", getAngleDegree() > target);
+                tele.addData("is -70>-130: ", -70 > -130);
+                tele.update();
+            }
+        }
+        leftDrive(0); //stop driving once target is reached
+        rightDrive(0);
+    }
+
 }
 
