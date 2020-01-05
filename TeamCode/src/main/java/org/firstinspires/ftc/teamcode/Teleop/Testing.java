@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.Teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.System.Drive;
 import org.firstinspires.ftc.teamcode.System.Hardware;
 
 @TeleOp(name = "Testing", group = "Teleop")
 public class Testing extends LinearOpMode {
     Hardware robot = new Hardware();
+    Drive drive = new Drive(robot, 100);
     double pos = 0;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -22,10 +24,10 @@ public class Testing extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-
         while (opModeIsActive()) {
 
 
+/*TESTING CLAW
             if (gamepad1.left_bumper) {
                 pos -= 0.05;
             }
@@ -38,6 +40,8 @@ public class Testing extends LinearOpMode {
 
             telemetry.addData("servo", pos);
             telemetry.update();
+
+ */
             sleep(50);
         }
         }

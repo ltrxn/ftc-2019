@@ -26,8 +26,6 @@ public class DriveOpMode extends LinearOpMode {
     //motor
     private double pulleyPower = 0;
 
-    //gyro
-    private Orientation angles;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,9 +43,8 @@ public class DriveOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //get angles of the robot
-            angles  = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
+            /*FIELD CENTRIC DRIVING
             //Gamepad 1 - LEFT JOYSTICK - Strafes robot
             double findRadius = Math.hypot(-gamepad1.right_stick_x, -gamepad1.right_stick_y);
             double findRadian = (Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 3.5);
@@ -61,6 +58,15 @@ public class DriveOpMode extends LinearOpMode {
 
             telemetry.addData("Radius", findRadius);
             telemetry.addData("Angle", findAngle);
+*/
+            //Gamepad 1 - LEFT JOYSTICK - Strafes robot
+            double radius = Math.hypot(-gamepad1.right_stick_x, -gamepad1.right_stick_y);
+            double robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 3.5;
+            double leftY = -gamepad1.left_stick_y / 2;
+            double v1 = radius * Math.cos(robotAngle) + leftY;
+            double v2 = radius * Math.sin(robotAngle) + leftY;
+            double v3 = radius * Math.sin(robotAngle) + leftY;
+            double v4 = radius * Math.cos(robotAngle) + leftY;
 
 
             //Gamepad 1 - RIGHT TRIGGER - Robot turns clockwise
@@ -104,7 +110,7 @@ public class DriveOpMode extends LinearOpMode {
             telemetry.addData("Encoder rightBack", robot.rightBack.getCurrentPosition());
             telemetry.addData("Encoder leftFront", robot.leftFront.getCurrentPosition());
             telemetry.addData("Encoder leftBack", robot.leftBack.getCurrentPosition());
-            telemetry.addData("Heading", formatAngle(angles.angleUnit, angles.firstAngle));
+            telemetry.addData("Heading", formatAngle(robot.getAngles().angleUnit, robot.getAngles().firstAngle));
             telemetry.addData("Claw position", robot.claw.getPosition());
             telemetry.update();
             idle();

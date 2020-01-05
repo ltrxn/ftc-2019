@@ -7,6 +7,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Hardware {
 
@@ -19,10 +23,7 @@ public class Hardware {
     public DcMotor pulley       = null;
 
     public Servo claw           = null;
-
     public BNO055IMU imu = null;
-
-
 
     /*  Private Members */
     HardwareMap map           = null;
@@ -109,6 +110,12 @@ public class Hardware {
     public void displayEncoderValues() {
         tele.addData("Front",    "left (%.2f), right (%.2f)", leftFront.getCurrentPosition(), rightFront.getCurrentPosition());
         tele.addData("Back",     "left (%.2f), right (%.2f)", leftBack.getCurrentPosition(), rightBack.getCurrentPosition());
+    }
+
+    public Orientation getAngles() {
+        Orientation angles;
+        angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles;
     }
 }
 
