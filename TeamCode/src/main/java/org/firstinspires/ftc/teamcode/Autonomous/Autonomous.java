@@ -19,20 +19,21 @@ public class Autonomous extends LinearOpMode {
         telemetry.setMsTransmissionInterval(100);
         telemetry.update();
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, this);
 
         telemetry.addData("Initialization", "Ready");
         telemetry.update();
 
         waitForStart();
 
+        robot.turn(90, .4);
+        //driveStraightDistance(5, 0.3);
     }
 
     public void driveStraightDistance(double distanceInInches, double masterPower) {
         int COUNTS_PER_INCH = 100;
 
         int targetTick = (int) (distanceInInches * COUNTS_PER_INCH);
-
 
         int totalTicks = 0;
 
@@ -45,18 +46,29 @@ public class Autonomous extends LinearOpMode {
         robot.resetEncoders();
         sleep(100);
 
-        while (totalTicks < targetTick) {
+        while ((totalTicks < targetTick) && opModeIsActive()) {
+
             robot.setMotorPower(masterPower, slavePower, masterPower, slavePower);
             error = robot.leftFront.getCurrentPosition() - robot.rightFront.getCurrentPosition();
 
             slavePower += error / kp;
 
+            telemetry.addData("Error", error);
+            telemetry.addData("kp", kp);
+            telemetry.addData("slavePower", slavePower);
+
             robot.resetEncoders();
             sleep(100);
 
             totalTicks += robot.leftFront.getCurrentPosition();
+            telemetry.addLine()
+                .addData("Current Position", totalTicks)
+                .addData("Target Position", targetTick);
+
         }
+
         robot.setMotorPower(0, 0, 0, 0);
+
     }
 
 

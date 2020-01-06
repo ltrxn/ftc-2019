@@ -18,7 +18,7 @@ public class Testing extends LinearOpMode {
         telemetry.setMsTransmissionInterval(100);
         telemetry.update();
 
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, this);
 
         telemetry.addData("Initialization", "Ready");
         telemetry.update();

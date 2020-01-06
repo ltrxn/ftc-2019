@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.System;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,9 +28,10 @@ public class Hardware {
     public BNO055IMU imu = null;
 
     /*  Private Members */
-    HardwareMap map           = null;
-    Telemetry tele            = null;
+    private HardwareMap map           = null;
+    private Telemetry tele            = null;
     private ElapsedTime period  = new ElapsedTime();
+    private LinearOpMode opMode;
 
 
     /**
@@ -41,7 +44,7 @@ public class Hardware {
      * Initialize standard hardware interfaces
      * @param hm - Hardware map
      */
-    public void init (HardwareMap hm, Telemetry t) {
+    public void init (HardwareMap hm, Telemetry t, LinearOpMode opMode) {
         //assign hardware map
         map = hm;
         tele = t;
@@ -67,6 +70,8 @@ public class Hardware {
         parameters.loggingTag = "IMU";
         imu = map.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        this.opMode = opMode;
 
         //reverse left side
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -137,15 +142,16 @@ public class Hardware {
     public Telemetry getTele() {
         return tele;
     }
-    public void turn(int target) {
+
+    public void turn(int target, double speed) {
         int currentAngle = getAngleDegree(); //robot's current angel
         int turnTarget = target + currentAngle; //set the target
 
         if (turnTarget > 179) {
             turnTarget %= 180; //make sure you don't go >180
             turnTarget = -180 + turnTarget;
-            while ((Math.abs(getAngleDegree() - turnTarget) > 3)) {
-                leftDrive(.8);
+            while ((Math.abs(getAngleDegree() - turnTarget) > 3) && opMode.opModeIsActive()) {
+                leftDrive(speed);
                 rightDrive(0);
                 tele.addData("current position", getAngleDegree());
                 tele.addData("target position", turnTarget);
@@ -157,10 +163,10 @@ public class Hardware {
         } else if (turnTarget < -179) {
             turnTarget %= 180; //make sure you don't go <-180
             turnTarget = 180 + turnTarget;
-            while ((Math.abs(getAngleDegree() - turnTarget) > 3)) {
+            while ((Math.abs(getAngleDegree() - turnTarget) > 3) && opMode.opModeIsActive()) {
 
                 leftDrive(0);
-                rightDrive(.8);
+                rightDrive(speed);
                 tele.addData("current position", getAngleDegree());
                 tele.addData("target position", turnTarget);
                 tele.addData("difference between current and target: ", Math.abs(getAngleDegree() - turnTarget));
@@ -169,13 +175,13 @@ public class Hardware {
             }
         } else {
 
-            while ((Math.abs(getAngleDegree() - turnTarget) > 3)) {
+            while ((Math.abs(getAngleDegree() - turnTarget) > 3) && opMode.opModeIsActive()) {
                 if (getAngleDegree() > target) { //if you are to the right of the target, rotate left
                     leftDrive(0);
-                    rightDrive(.8);
+                    rightDrive(speed);
                 }
                 if (getAngleDegree() < target) { //if you are to the left of the target, rotate right
-                    leftDrive(.8);
+                    leftDrive(speed);
                     rightDrive(0);
                 }
                 tele.addData("current position", getAngleDegree());
